@@ -1,13 +1,13 @@
 <html>
-    <head>
-        <title>My First Web Page</title>
-        <script src="myComponents/index.js" type="module"></script>
-        <link rel="stylesheet" href="./myComponents/index.css">
-    </head>
-    <body  >
-
-        <audio-element src="./myComponents/assets/test1.mp3">
-        </audio-element>
-
-    </body>
+<head>
+    <title>Generator Audio</title>
+    <link rel="stylesheet" href="myComponents/index.css">
+    <script src="./myComponents/audio-player/audio-player.js" type="module"></script>
+    <script src="./myComponents/audio-visualizer/audio-visualizer.js" type="module"></script>
+</head>
+<body>
+    <h1>Generator Audio</h1>
+    <audio-player id="audioPlayer" src="./myComponents/assets/test1.mp3"></audio-player>
+    <audio-visualizer id="audioVisualizer"></audio-visualizer>
+</body>
 </html>
