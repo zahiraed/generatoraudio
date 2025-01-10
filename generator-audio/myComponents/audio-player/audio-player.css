@@ -1,22 +1,22 @@
-.audio-player h1 {
-  color: black;
-  text-align: center;
+.audio-player {
+  height: auto;
+  width: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  align-items: center;
 }
 .audio-player .container {
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   height: fit-content;
+  width: 500px;
 }
 .audio-player .controls {
-  margin-top: 30px;
+  padding: 10px;
   display: flex;
   justify-content: space-evenly;
   border: 2px solid black;
-  padding: 10px;
   border-radius: 800px;
   background: grey;
   box-shadow: 6px 6px 10px pink;
@@ -37,9 +37,8 @@
   border: 2px solid black;
   width: fit-content;
   float: right;
-  margin-right: 30px;
-  margin-top: 300px;
   border-radius: 8px;
+  margin-top: 15px;
   padding: 10px;
   display: flex;
   justify-content: space-around;

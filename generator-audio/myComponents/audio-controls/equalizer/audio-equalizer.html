@@ -1,0 +1,53 @@
+<template id="audio-equalizer-template">
+  <style>
+    @import url("./myComponents/audio-controls/equalizer/audio-equalizer.css");
+  </style>
+  <div class="equalizer-container">
+    <!-- Frequency Visualization -->
+    <canvas id="frequency-visualization"></canvas>
+    <!-- Frequency Sliders -->
+    <div class="frequency-sliders">
+      <div class="slider-container">
+        <label for="sub-bass">Sub-bass</label>
+        <input type="range" id="sub-bass" min="-10" max="10" value="0" />
+      </div>
+      <div class="slider-container">
+        <label for="bass">Bass</label>
+        <input type="range" id="bass" min="-10" max="10" value="0" />
+      </div>
+      <div class="slider-container">
+        <label for="low-mids">Low Mids</label>
+        <input type="range" id="low-mids" min="-10" max="10" value="0" />
+      </div>
+      <div class="slider-container">
+        <label for="midrange">Midrange</label>
+        <input type="range" id="midrange" min="-10" max="10" value="0" />
+      </div>
+      <div class="slider-container">
+        <label for="high-mids">High Mids</label>
+        <input type="range" id="high-mids" min="-10" max="10" value="0" />
+      </div>
+      <div class="slider-container">
+        <label for="presence">Presence</label>
+        <input type="range" id="presence" min="-10" max="10" value="0" />
+      </div>
+      <div class="slider-container">
+        <label for="brilliance">Brilliance</label>
+        <input type="range" id="brilliance" min="-10" max="10" value="0" />
+      </div>
+    </div>
+
+    <!-- Presets -->
+    <div class="presets">
+      <select id="preset-selector">
+        <option value="">Select a Preset</option>
+        <option value="rock">Rock</option>
+        <option value="pop">Pop</option>
+        <option value="jazz">Jazz</option>
+        <option value="classical">Classical</option>
+        <option value="vocal-boost">Vocal Boost</option>
+        <option value="bass-boost">Bass Boost</option>
+      </select>
+    </div>
+  </div>
+</template>

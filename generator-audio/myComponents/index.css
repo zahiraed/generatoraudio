@@ -2,5 +2,31 @@ audio {
   visibility: hidden;
 }
 body {
-  background-color: rgb(171, 0, 131);
+  background: linear-gradient(to right, #ffdee9, #b5fffc);
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: fit-content;
+  margin: auto auto;
+}
+h1 {
+  color: black;
+  text-align: center;
+}
+.audio-player {
+}
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+audio-visualizer {
+  margin: auto;
+  width: fit-content;
+  margin-bottom: 150px;
+  align-items: center;
 }

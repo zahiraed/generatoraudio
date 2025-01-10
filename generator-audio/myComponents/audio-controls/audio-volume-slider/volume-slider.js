@@ -59,11 +59,11 @@ class AudioVolumeSlider extends HTMLElement {
     this.max = 1;
     this.value = 0.5;
     this.step = 0.01;
-    this.width = 24;
-    this.height = 128;
+    this.width = 128;
+    this.height = 24;
     this.knobWidth = 24;
     this.knobHeight = 24;
-    this.dlen = this.height - this.knobHeight;
+    this.dlen = this.width - this.knobWidth;
 
     this.elem.style.width = `${this.width}px`;
     this.elem.style.height = `${this.height}px`;
@@ -76,8 +76,8 @@ class AudioVolumeSlider extends HTMLElement {
 
   redraw() {
     const ratio = (this.value - this.min) / (this.max - this.min);
-    this.knob.style.top = `${(1 - ratio) * this.dlen}px`;
-    this.knob.style.left = `${(this.width - this.knobWidth) / 2}px`; // Center the knob horizontally
+    this.knob.style.left = `${ratio * this.dlen}px`;
+    this.knob.style.top = `${(this.height - this.knobHeight) / 2}px`; // Center the knob vertically
   }
 
   defineListeners() {
@@ -88,8 +88,8 @@ class AudioVolumeSlider extends HTMLElement {
   pointerdown(ev) {
     const pointermove = (ev) => {
       const rect = this.elem.getBoundingClientRect();
-      const y = ev.touches ? ev.touches[0].clientY : ev.clientY;
-      const ratio = Math.max(0, Math.min(1, (rect.bottom - y) / this.dlen));
+      const x = ev.touches ? ev.touches[0].clientX : ev.clientX;
+      const ratio = Math.max(0, Math.min(1, (x - rect.left) / this.dlen));
       this.value = this.min + ratio * (this.max - this.min);
       this.redraw();
       this.dispatchEvent(new Event('input'));

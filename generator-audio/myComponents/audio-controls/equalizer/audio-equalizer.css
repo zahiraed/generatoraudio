@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+.equalizer-container {
+  background: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: fit-content;
+}
+.frequency-sliders {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.frequency-sliders label {
+  text-align: center;
+  font-size: 12px;
+}
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.slider-container input[type="range"] {
+  writing-mode: bt-lr; /* Rotate slider for vertical alignment */
+  -webkit-appearance: slider-vertical;
+  appearance: slider-vertical;
+  width: 100px;
+  height: 150px;
+}
+.presets {
+  margin-bottom: 20px;
+}
+.presets select {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #444;
+  color: white;
+}
+canvas {
+  width: 100%;
+  height: 320px;
+  background: black;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}

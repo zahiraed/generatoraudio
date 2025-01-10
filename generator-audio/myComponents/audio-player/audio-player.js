@@ -5,7 +5,7 @@ class AudioPlayer extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.src = this.getAttribute("src");
 
-    fetch('./myComponents/audio-player/audio-player.html')
+    fetch("./myComponents/audio-player/audio-player.html")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to load template: ${response.statusText}`);
@@ -13,14 +13,13 @@ class AudioPlayer extends HTMLElement {
         return response.text();
       })
       .then((data) => {
-        console.log("Audio player template loaded.");
-        const template = document.createElement('template');
+        const template = document.createElement("template");
         template.innerHTML = data;
-        const templateContent = template.content.querySelector('template').content;
+        const templateContent =
+          template.content.querySelector("template").content;
 
         this.shadowRoot.appendChild(templateContent.cloneNode(true));
-        console.log("Audio player shadow DOM initialized.");
-        
+
         // Now safely call connectedCallback
         this.initializePlayer();
       })
@@ -30,16 +29,33 @@ class AudioPlayer extends HTMLElement {
   }
 
   initializePlayer() {
-    console.log("AudioPlayer initializePlayer called.");
     this.player = this.shadowRoot.querySelector("#player");
     if (!this.player) {
       console.error("Player element not found in shadow DOM.");
       return;
     }
-    console.log("Player element found:", this.player);
     this.player.src = this.src; // Set the src attribute for the audio element
-    console.log("Audio player source set to:", this.src);
+
+    // Initialize AudioContext and connect the audio source
+    if (!this.audioContext) {
+      this.audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      this.mediaElementSource = this.audioContext.createMediaElementSource(
+        this.player
+      );
+
+      // Initially, connect directly to the destination
+      this.mediaElementSource.connect(this.audioContext.destination);
+    }
     this.defineListeners();
+  }
+  // Expose AudioContext and MediaElementSourceNode
+  getAudioContext() {
+    return this.audioContext;
+  }
+
+  getMediaElementSource() {
+    return this.mediaElementSource;
   }
 
   defineListeners() {
@@ -59,15 +75,20 @@ class AudioPlayer extends HTMLElement {
     this.shadowRoot.querySelector("#backward").addEventListener("click", () => {
       this.player.currentTime -= 10;
     });
-    this.shadowRoot.querySelector("#volumeSlider").addEventListener("input", (e) => {
-      this.player.volume = e.target.value;
-    });
+    this.shadowRoot
+      .querySelector("#volumeSlider")
+      .addEventListener("input", (e) => {
+        this.player.volume = e.target.value;
+      });
 
-    const balanceControl = this.shadowRoot.querySelector('[data-action="panner"]');
+    const balanceControl = this.shadowRoot.querySelector(
+      '[data-action="panner"]'
+    );
     balanceControl.addEventListener(
       "input",
       function () {
-        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const context = new (window.AudioContext ||
+          window.webkitAudioContext)();
         const source = context.createMediaElementSource(this.player);
         const balancer = new StereoPannerNode(context, { pan: this.value });
         source.connect(balancer).connect(context.destination);
