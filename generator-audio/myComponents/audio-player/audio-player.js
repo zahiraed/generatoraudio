@@ -44,11 +44,11 @@ class AudioPlayer extends HTMLElement {
         this.player
       );
 
-      // Initially, connect directly to the destination
-      this.mediaElementSource.connect(this.audioContext.destination);
+      // Connect the audio graph: mediaElementSource -> stereoPanner -> destination
     }
     this.defineListeners();
   }
+
   // Expose AudioContext and MediaElementSourceNode
   getAudioContext() {
     return this.audioContext;
@@ -81,20 +81,13 @@ class AudioPlayer extends HTMLElement {
         this.player.volume = e.target.value;
       });
 
-    const balanceControl = this.shadowRoot.querySelector(
-      '[data-action="panner"]'
-    );
-    balanceControl.addEventListener(
-      "input",
-      function () {
-        const context = new (window.AudioContext ||
-          window.webkitAudioContext)();
-        const source = context.createMediaElementSource(this.player);
-        const balancer = new StereoPannerNode(context, { pan: this.value });
-        source.connect(balancer).connect(context.destination);
-      }.bind(this),
-      false
-    );
+    // Listen for song-selected events
+    document.addEventListener("song-selected", (event) => {
+      const src = event.detail.src;
+      this.player.src = src;
+      this.player.play();
+      console.log(`Now playing: ${src}`);
+    });
   }
 }
 

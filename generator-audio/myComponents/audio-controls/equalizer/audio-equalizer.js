@@ -21,7 +21,6 @@ class AudioEqualizer extends HTMLElement {
         return response.text();
       })
       .then((data) => {
-        console.log("Audio equalizer template loaded.");
         const template = document.createElement("template");
         template.innerHTML = data;
         const templateContent =
@@ -35,7 +34,6 @@ class AudioEqualizer extends HTMLElement {
   }
 
   connectedCallback() {
-    console.log("AudioEqualizer connected to the DOM.");
     const audioPlayer = document.querySelector("audio-player");
 
     if (audioPlayer) {
@@ -55,7 +53,6 @@ class AudioEqualizer extends HTMLElement {
         previousNode.connect(filter);
         this.filters.push(filter);
 
-        console.log(`Filter ${index} created with frequency ${freq} Hz`);
         previousNode = filter;
       });
 
@@ -67,12 +64,10 @@ class AudioEqualizer extends HTMLElement {
       // Connect the analyser to the destination
       this.analyser.connect(this.audioContext.destination);
 
-      console.log(`Filters array length: ${this.filters.length}`);
 
       // Initialize the visualization
       this.initializeVisualization();
 
-      console.log(`Filters array length: ${this.filters.length}`);
 
       // Connect the last filter to the destination
       this.filters[this.filters.length - 1].connect(
@@ -87,24 +82,19 @@ class AudioEqualizer extends HTMLElement {
   }
 
   initializeEqualizer() {
-    console.log("Initializing Equalizer...");
     this.defineListeners();
   }
 
   defineListeners() {
     const sliders = this.shadowRoot.querySelectorAll(".slider-container input");
 
-    console.log(`Found ${sliders.length} sliders.`);
 
     sliders.forEach((slider, index) => {
       slider.addEventListener("input", (event) => {
         const gainValue = parseFloat(event.target.value);
-        console.log(`Slider for filter ${index} set to ${gainValue}`);
         if (this.filters[index]) {
           this.filters[index].gain.value = gainValue;
-          console.log(
-            `Filter ${index} gain updated to ${this.filters[index].gain.value}`
-          );
+
         } else {
           console.error(`Filter ${index} not found.`);
         }
@@ -113,7 +103,6 @@ class AudioEqualizer extends HTMLElement {
 
     const presetSelector = this.shadowRoot.querySelector("#preset-selector");
     presetSelector.addEventListener("change", (event) => {
-      console.log(`Preset selected: ${event.target.value}`);
       this.applyPreset(event.target.value);
     });
   }
@@ -131,9 +120,6 @@ class AudioEqualizer extends HTMLElement {
       slider.value = gains[index];
       if (this.filters[index]) {
         this.filters[index].gain.value = gains[index]; // Update the filter gain
-        console.log(
-          `Setting filter ${index} (${this.filters[index].frequency.value} Hz) gain to ${gains[index]}`
-        );
       }
     });
   }

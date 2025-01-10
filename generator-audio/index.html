@@ -1,19 +1,48 @@
 <html>
-<head>
+  <head>
     <title>Generator Audio</title>
-    <link rel="stylesheet" href="myComponents/index.css">
-    <script src="./myComponents/audio-player/audio-player.js" type="module"></script>
-    <script src="./myComponents/audio-visualizer/audio-visualizer.js" type="module"></script>
-    <script src="./myComponents/audio-controls/equalizer/audio-equalizer.js" type="module"></script>
-</head>
-<body>
-    <h1>Generator Audio</h1>
-    <div class="container">
-        <audio-visualizer id="audioVisualizer"></audio-visualizer>
+    <link rel="stylesheet" href="myComponents/index.css" />
+    <script
+      src="./myComponents/audio-player/audio-player.js"
+      type="module"
+    ></script>
+    <script
+      src="./myComponents/audio-visualizer/audio-visualizer.js"
+      type="module"
+    ></script>
+    <script
+      src="./myComponents/audio-controls/equalizer/audio-equalizer.js"
+      type="module"
+    ></script>
+    <script
+      src="./myComponents/audio-playlist/audio-playlist.js"
+      type="module"
+    ></script>
+  </head>
+  <body>
+    <div class="main">
 
-        <audio-player id="audioPlayer" src="./myComponents/assets/test1.mp3"></audio-player>
+      <div class="sidebar">
+        <audio-playlist></audio-playlist>
+      </div>
 
-        <audio-equalizer id="audioEqualizer"></audio-equalizer>
+      <div class="content">
+        <h1>Generator Audio</h1>
+        <div class="container">
+          <div class="lhs">
+            <audio-visualizer id="audioVisualizer"></audio-visualizer>
+
+            <audio-player
+              id="audioPlayer"
+              src="./myComponents/assets/test1.mp3"
+            ></audio-player>
+          </div>
+          <div class="rhs">
+            <audio-equalizer id="audioEqualizer"></audio-equalizer>
+          </div>
+        </div>
+      </div>
+      
     </div>
-</body>
+  </body>
 </html>

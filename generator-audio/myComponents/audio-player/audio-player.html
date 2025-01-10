@@ -4,38 +4,45 @@
   </style>
   <div class="audio-player">
     <div class="vol-lev">
-      <div style="display: flex; justify-content: center; flex-direction: column">
-        <div class="pan-button">
-          Left
-          <input type="range" id="panner" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
-          Right
-          <datalist id="pan-vals">
-            <option value="-1" label="left"></option>
-            <option value="1" label="right"></option>
-          </datalist>
-        </div>
-        <label for="panner" style="width: 30px; margin: auto">Balance</label>
-      </div>
-      <audio-volume-slider id="volumeSlider" style="margin: 0 1em;" direction="vert" min="0" max="2" step="0.1" value="1" colors="#0f0;#000;#ff0">Volume</audio-volume-slider>  
+        volume
+      <audio-volume-slider
+        id="volumeSlider"
+        style="margin: 0 1em"
+        direction="vert"
+        min="0"
+        max="2"
+        step="0.1"
+        value="1"
+        colors="#0f0;#000;#ff0"
+        >Volume</audio-volume-slider
+      >
     </div>
     <div class="container">
       <div class="controls">
         <audio id="player" src="" loop="true"></audio>
         <br />
         <button id="play">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAAxElEQVRIie3WMWpCURBG4Q8FSRrtbC2SPhvICmzchVuwtXQLbsE2pVUIkjqQHVgqNmIj6EvxGHhFQAIvcxt/OPVhhrlzh3sKZ4MvTLLFVYNPvJYQB294LiGucMYSw2xxcMQcj9niYIsputni4BvjEuJgjZcS4goXrDDKFgcnLDDIFgd7zNDLFgfvTUHnL23ISJuV7iS3Ooarn1VxkeeUvkDSV2b6J3FQT+pDW8Jb4vRD4Kqe1Kf/Ev4mTj32PhQ6b+9pPT+XHgysHrPM6QAAAABJRU5ErkJggg==" />
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAAxElEQVRIie3WMWpCURBG4Q8FSRrtbC2SPhvICmzchVuwtXQLbsE2pVUIkjqQHVgqNmIj6EvxGHhFQAIvcxt/OPVhhrlzh3sKZ4MvTLLFVYNPvJYQB294LiGucMYSw2xxcMQcj9niYIsputni4BvjEuJgjZcS4goXrDDKFgcnLDDIFgd7zNDLFgfvTUHnL23ISJuV7iS3Ooarn1VxkeeUvkDSV2b6J3FQT+pDW8Jb4vRD4Kqe1Kf/Ev4mTj32PhQ6b+9pPT+XHgysHrPM6QAAAABJRU5ErkJggg=="
+          />
         </button>
         <button id="pause">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAAXklEQVRIie2WUQqAIBAFx06XdP8LuN5DfwwKUhA2kHoD+yPjzu+C+DMHkIHSxoDo6Hexy5JzkpcfBovK5J8pfxuEX0VhhRVWWGGFFV47nB/ezNHvErnfUQnYHX3xcSrwEiKQG9/iJwAAAABJRU5ErkJggg==" />
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAAXklEQVRIie2WUQqAIBAFx06XdP8LuN5DfwwKUhA2kHoD+yPjzu+C+DMHkIHSxoDo6Hexy5JzkpcfBovK5J8pfxuEX0VhhRVWWGGFFV47nB/ezNHvErnfUQnYHX3xcSrwEiKQG9/iJwAAAABJRU5ErkJggg=="
+          />
         </button>
         <button id="stop">
           <img src="https://img.icons8.com/ios-filled/50/000000/stop.png" />
         </button>
         <button id="backward">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABW0lEQVRIie2VMU7DMBhGnwND1YU5dhnojgRbBxiAE5SFrSNwjHICRtROCAkkJrgACzAwIW7AQO1sjJCl+VnSKkKlsRsWUL417/+ebNkx1Knz36JCB1qt1nqWZefAh3Nue1F+OURqjOllWXYGNKvyXuJ2u72SpulARA5+iy8VG2M6aZpeAWs+Ul8+mvNtSWvdF5FHT2kQP3PFWutV4BIoPTyL8DBjxXEcd4EX35JQfpLpddJaN5VSpyJy6D2s1DCEd85NfcWtvhORjm8JQIj0e4pbLYuWVBJHUbQnIoOQYaXUsLJ4NBp9JklyDHSBd59ha+2RiOz78jPFkzjnboEN4N6nIEmSm5x/qCTO5W/OuV3gBBiXleT8ji//ozjP2DnXV0ptAa8eXUH8PDEA1tqnRqOxCVx7yL35oPfYGNMTkekzV/whhPKlKy7GWnsRRVEHeMbjMIXyder87XwBum2qnJAnRMIAAAAASUVORK5CYII=" />
-          </button>
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAABW0lEQVRIie2VMU7DMBhGnwND1YU5dhnojgRbBxiAE5SFrSNwjHICRtROCAkkJrgACzAwIW7AQO1sjJCl+VnSKkKlsRsWUL417/+ebNkx1Knz36JCB1qt1nqWZefAh3Nue1F+OURqjOllWXYGNKvyXuJ2u72SpulARA5+iy8VG2M6aZpeAWs+Ul8+mvNtSWvdF5FHT2kQP3PFWutV4BIoPTyL8DBjxXEcd4EX35JQfpLpddJaN5VSpyJy6D2s1DCEd85NfcWtvhORjm8JQIj0e4pbLYuWVBJHUbQnIoOQYaXUsLJ4NBp9JklyDHSBd59ha+2RiOz78jPFkzjnboEN4N6nIEmSm5x/qCTO5W/OuV3gBBiXleT8ji//ozjP2DnXV0ptAa8eXUH8PDEA1tqnRqOxCVx7yL35oPfYGNMTkekzV/whhPKlKy7GWnsRRVEHeMbjMIXyder87XwBum2qnJAnRMIAAAAASUVORK5CYII="
+          />
+        </button>
         <button id="forward">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAACHElEQVR4nO3aPY8NURzH8Q8r7Ip4iIREsEGpoBASFETn4SXQSBReAAkKCYpNSHgBIlGKKLQKW25CRWNbQiUUiIdgFHfPuuy9dmfu3JmN8/8mv9xkmt8535zMnDtnCIIgCIIgCIIgCPJjpMe1LViJjw2PZQzj+ILvDXeDvXiOYiZTONRA7wiu6ggvZn5vYl0D3bNswju/J9+d+9g2xO5LfXrf4iyWDbF7lgt9BpHyGdewqubeJToT/Vf3MxypuXcOt+cZRMprnJwZeB2sXWBvgQfYXlPvHO6UGEiBJzhQQ+/6kr3fcAura+j+g7ICCvzEPWwdoLesgJQ3OKP3U6wSVQSkfMJljFborSog5SkOVuidwyACUl7hlHL3h0EFdK/E8QrznqUOASmPsWuBvXUI+HsljrUtoMAP3MWGBgUMshJrF5DyHuexokEBKVPY17aAlGkcb1hA90rc2LaAlEfY2aCAlA8694d+K7ExAYXOZuYG1jQoIOUFjrYtIOV0CwJSJtLEl/aykQHncJh8BcAJ8haAvAU8JF8BE5jsvtDkU+Arrsv0MZjtRmgax3r0/vdb4fRnaHmf3mEKmMTu+SY+LAFZ/x3O9oXISx3zZfgvXoll+1J0MbwWr20jV+VgZH8NvYvmYCT7o7HsD0fbPB6/2Ke30eNx2KNjOw2gyQ8krmj5A4luNlvA3nkIjGKHao/TIAiCIAiCIAiCICjBL6Td6ua5TLqNAAAAAElFTkSuQmCC" />
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAACHElEQVR4nO3aPY8NURzH8Q8r7Ip4iIREsEGpoBASFETn4SXQSBReAAkKCYpNSHgBIlGKKLQKW25CRWNbQiUUiIdgFHfPuuy9dmfu3JmN8/8mv9xkmt8535zMnDtnCIIgCIIgCIIgCPJjpMe1LViJjw2PZQzj+ILvDXeDvXiOYiZTONRA7wiu6ggvZn5vYl0D3bNswju/J9+d+9g2xO5LfXrf4iyWDbF7lgt9BpHyGdewqubeJToT/Vf3MxypuXcOt+cZRMprnJwZeB2sXWBvgQfYXlPvHO6UGEiBJzhQQ+/6kr3fcAura+j+g7ICCvzEPWwdoLesgJQ3OKP3U6wSVQSkfMJljFborSog5SkOVuidwyACUl7hlHL3h0EFdK/E8QrznqUOASmPsWuBvXUI+HsljrUtoMAP3MWGBgUMshJrF5DyHuexokEBKVPY17aAlGkcb1hA90rc2LaAlEfY2aCAlA8694d+K7ExAYXOZuYG1jQoIOUFjrYtIOV0CwJSJtLEl/aykQHncJh8BcAJ8haAvAU8JF8BE5jsvtDkU+Arrsv0MZjtRmgax3r0/vdb4fRnaHmf3mEKmMTu+SY+LAFZ/x3O9oXISx3zZfgvXoll+1J0MbwWr20jV+VgZH8NvYvmYCT7o7HsD0fbPB6/2Ke30eNx2KNjOw2gyQ8krmj5A4luNlvA3nkIjGKHao/TIAiCIAiCIAiCICjBL6Td6ua5TLqNAAAAAElFTkSuQmCC"
+          />
         </button>
       </div>
     </div>
