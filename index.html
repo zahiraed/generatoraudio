@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Generator Audio</title>
+    <link rel="stylesheet" href="myComponents/index.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.module.js"></script>
+
+    <script
+      src="./myComponents/audio-player/audio-player.js"
+      type="module"
+    ></script>
+    <script
+      src="./myComponents/audio-visualizer/audio-visualizer.js"
+      type="module"
+    ></script>
+    <script
+      src="./myComponents/audio-controls/equalizer/audio-equalizer.js"
+      type="module"
+    ></script>
+    <script
+      src="./myComponents/audio-playlist/audio-playlist.js"
+      type="module"
+    ></script>
+  </head>
+  <body>
+    <div class="main">
+
+      <div class="sidebar">
+        <audio-playlist></audio-playlist>
+      </div>
+
+      <div class="content">
+        <h1>Generator Audio</h1>
+        <div class="container">
+          <div class="lhs">
+            <audio-visualizer id="audioVisualizer"></audio-visualizer>
+
+            <audio-player
+              id="audioPlayer"
+              src="./myComponents/assets/test1.mp3"
+            ></audio-player>
+          </div>
+          <div class="rhs">
+            <audio-equalizer id="audioEqualizer"></audio-equalizer>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </body>
+</html>
