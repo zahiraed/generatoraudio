@@ -27,14 +27,22 @@ class AudioPlaylist extends HTMLElement {
     this.setupListeners();
   }
 
+  getBaseURL = () => {
+    const scriptURL = new URL(import.meta.url);
+    return (
+      scriptURL.origin +
+      scriptURL.pathname.substring(0, scriptURL.pathname.lastIndexOf("/") + 1)
+    );
+  };
+
   setupListeners() {
     const items = this.shadowRoot.querySelectorAll(".playlist-item");
     items.forEach((item) => {
       item.addEventListener("click", () => {
         const src = item.getAttribute("data-src");
         console.log("Selected song:", src);
-        
-
+        const path = this.getBaseURL() + src;
+        console.log("full path:", this.getBaseURL() + src);
         // Remove "active" class from all items
         items.forEach((i) => i.classList.remove("active"));
 
@@ -44,7 +52,7 @@ class AudioPlaylist extends HTMLElement {
         // Dispatch a custom event with the selected song
         this.dispatchEvent(
           new CustomEvent("song-selected", {
-            detail: { src },
+            detail: { path },
             bubbles: true,
             composed: true,
           })

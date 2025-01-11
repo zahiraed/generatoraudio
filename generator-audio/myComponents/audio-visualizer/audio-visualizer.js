@@ -1,32 +1,34 @@
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.module.js";
+
 class AudioVisualizer extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    document.addEventListener("DOMContentLoaded", () => {
-      const visualizer = document.querySelector("audio-visualizer");
-      if (visualizer) {
-        visualizer.connectedCallback();
-      } else {
-        console.error("Audio visualizer element not found.");
-      }
-    });
   }
 
   connectedCallback() {
     const css = `
       <style>
-      canvas {
-        border: none;
-        border-radius: 800px;
-        box-shadow: 6px 6px 10px pink;
-      }
-      </style>`;
-
-    const htmlDOM = `
-        <canvas id='aCanvas' height='500' width='900'></canvas>
-`;
-
-    this.shadowRoot.innerHTML = `${css} ${htmlDOM}`;
+        :host {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+        #visualizer-container {
+          position: relative;
+          width: 900px;
+          height: 500px;
+          border-radius: 800px; /* Rounded rectangle edges */
+          overflow: hidden;
+          box-shadow: 6px 6px 10px pink;
+        }
+        canvas {
+          display: block;
+        }
+      </style>
+    `;
+    const htmlDOM = `<div id="visualizer-container"></div>`;
+    this.shadowRoot.innerHTML = `${css}${htmlDOM}`;
     this.setupVisualizer();
   }
 
@@ -51,9 +53,7 @@ class AudioVisualizer extends HTMLElement {
             if (player) {
               clearInterval(interval);
               resolve(audioPlayer);
-            } else {
             }
-          } else {
           }
         }, 100); // Poll every 100ms
       });
@@ -61,17 +61,64 @@ class AudioVisualizer extends HTMLElement {
 
     waitForAudioPlayer().then((audioPlayer) => {
       const player = audioPlayer.shadowRoot.querySelector("#player");
-
       if (!(player instanceof HTMLMediaElement)) {
         console.error("Audio player is not an HTMLMediaElement");
         return;
       }
-      const canvas = this.shadowRoot.querySelector("canvas");
-      const canvasContext = canvas.getContext("2d");
-      let width, height;
+
+      const container = this.shadowRoot.querySelector("#visualizer-container");
+      const width = container.offsetWidth || 900;
+      const height = container.offsetHeight || 500;
+
+      // Three.js Setup
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+      camera.position.z = 5;
+
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(width, height);
+      renderer.setClearColor(0x000000); // Black background
+      container.appendChild(renderer.domElement);
+
+      // Create Particle System
+      const particleCount = 1000; // Number of particles
+      const particlesGeometry = new THREE.BufferGeometry();
+      const positions = [];
+      const colors = [];
+      const sizes = [];
+
+      for (let i = 0; i < particleCount; i++) {
+        positions.push(
+          (Math.random() - 0.5) * 10, // Random x position
+          (Math.random() - 0.5) * 10, // Random y position
+          (Math.random() - 0.5) * 10 // Random z position
+        );
+        colors.push(Math.random(), Math.random(), Math.random()); // Random RGB
+        sizes.push(Math.random() * 0.1 + 0.1); // Random size
+      }
+
+      particlesGeometry.setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(positions, 3)
+      );
+      particlesGeometry.setAttribute(
+        "color",
+        new THREE.Float32BufferAttribute(colors, 3)
+      );
+
+      const particlesMaterial = new THREE.PointsMaterial({
+        vertexColors: true,
+        size: 0.1,
+        sizeAttenuation: true,
+      });
+
+      const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+      scene.add(particles);
+
+      // Audio Context and AnalyserNode
       const context = audioPlayer.getAudioContext();
       const analyser = context.createAnalyser();
-      analyser.fftSize = 2048;
+      analyser.fftSize = 256;
       const bufferLength = analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
 
@@ -79,38 +126,39 @@ class AudioVisualizer extends HTMLElement {
       source.connect(analyser);
       source.connect(context.destination);
 
-      function loadCanvas() {
-        width = canvas.width;
-        height = canvas.height;
+      // Animation Loop
+      const animate = () => {
+        analyser.getByteFrequencyData(dataArray);
 
-        canvasContext.fillStyle = "rgba(0, 0, 0, 1)";
-        canvasContext.fillRect(0, 0, width, height);
-        canvasContext.lineWidth = 2;
-        canvasContext.strokeStyle = "yellow";
-      }
+        // Animate particles based on frequency data
+        const positions = particlesGeometry.attributes.position.array;
+        const colors = particlesGeometry.attributes.color.array;
 
-      function startVisualize() {
-        analyser.getByteTimeDomainData(dataArray);
-        canvasContext.clearRect(0, 0, width, height);
-        canvasContext.fillStyle = "rgba(0, 0, 0, 1)";
-        canvasContext.fillRect(0, 0, width, height);
+        for (let i = 0; i < particleCount; i++) {
+          const freqIndex = i % bufferLength; // Loop through frequencies
+          const scale = dataArray[freqIndex] / 255;
 
-        let sliceWidth = width * (1.0 / dataArray.length);
-        let x = 0;
-        let y = height - 200;
-        for (let i = 0; i < dataArray.length; i++) {
-          canvasContext.beginPath();
-          canvasContext.moveTo(x, y);
-          let v = y - (dataArray[i] - 127);
-          canvasContext.lineTo(x, v);
-          canvasContext.stroke();
-          x += sliceWidth;
+          // Modify particle positions
+          positions[i * 3 + 2] = scale * 5; // Modify Z-axis based on frequency
+
+          // Update particle colors dynamically
+          colors[i * 3] = Math.random(); // Red
+          colors[i * 3 + 1] = scale; // Green
+          colors[i * 3 + 2] = Math.random(); // Blue
         }
-        window.requestAnimationFrame(startVisualize);
-      }
 
-      loadCanvas();
-      startVisualize();
+        particlesGeometry.attributes.position.needsUpdate = true;
+        particlesGeometry.attributes.color.needsUpdate = true;
+
+        // Rotate particles
+        particles.rotation.y += 0.002;
+        particles.rotation.x += 0.001;
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      };
+
+      animate();
     });
   }
 }
