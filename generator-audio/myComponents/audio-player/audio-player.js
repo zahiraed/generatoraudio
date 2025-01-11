@@ -86,7 +86,6 @@ class AudioPlayer extends HTMLElement {
       const src = event.detail.src;
       this.player.src = src;
       this.player.play();
-      console.log(`Now playing: ${src}`);
     });
   }
 }

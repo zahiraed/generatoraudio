@@ -3,6 +3,26 @@ class AudioPlaylist extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
 
+    // Function to get base URL
+    this.getBaseURL = () => {
+      const scriptURL = new URL(import.meta.url);
+      return (
+        scriptURL.origin +
+        scriptURL.pathname.substring(0, scriptURL.pathname.lastIndexOf("/") + 1)
+      );
+    };
+
+    const baseURL = this.getBaseURL();
+
+    // List of audio files with absolute paths
+    this.audioFiles = [
+      `${baseURL}../assets/test1.mp3`,
+      `${baseURL}../assets/test2.mp3`,
+      `${baseURL}../assets/test3.mp3`,
+      `${baseURL}../assets/test4.mp3`,
+      `${baseURL}../assets/test5.mp3`,
+    ];
+
     fetch("./myComponents/audio-playlist/audio-playlist.html")
       .then((response) => {
         if (!response.ok) {
@@ -27,22 +47,15 @@ class AudioPlaylist extends HTMLElement {
     this.setupListeners();
   }
 
-  getBaseURL = () => {
-    const scriptURL = new URL(import.meta.url);
-    return (
-      scriptURL.origin +
-      scriptURL.pathname.substring(0, scriptURL.pathname.lastIndexOf("/") + 1)
-    );
-  };
-
   setupListeners() {
     const items = this.shadowRoot.querySelectorAll(".playlist-item");
-    items.forEach((item) => {
+    items.forEach((item, index) => {
       item.addEventListener("click", () => {
-        const src = item.getAttribute("data-src");
-        console.log("Selected song:", src);
+        const src = this.audioFiles[index];
+
+        // Construct the full path using the updated getBaseURL
         const path = this.getBaseURL() + src;
-        console.log("full path:", this.getBaseURL() + src);
+
         // Remove "active" class from all items
         items.forEach((i) => i.classList.remove("active"));
 
@@ -52,7 +65,7 @@ class AudioPlaylist extends HTMLElement {
         // Dispatch a custom event with the selected song
         this.dispatchEvent(
           new CustomEvent("song-selected", {
-            detail: { path },
+            detail: { src },
             bubbles: true,
             composed: true,
           })
