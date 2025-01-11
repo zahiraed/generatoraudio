@@ -1,0 +1,41 @@
+audio {
+  visibility: hidden;
+}
+body {
+  margin:0px;
+  background: linear-gradient(to right, #ffdee9, #b5fffc);
+}
+.main {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+.content {
+  flex: 1;
+  padding: 20px;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: fit-content;
+  margin: auto auto;
+  gap:10px;
+}
+h1 {
+  color: black;
+  text-align: center;
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.lhs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
