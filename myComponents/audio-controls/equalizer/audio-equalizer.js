@@ -34,6 +34,7 @@ class AudioEqualizer extends HTMLElement {
   }
 
   connectedCallback() {
+    console.log("AudioEqualizer connected.");
     const audioPlayer = document.querySelector("audio-player");
 
     if (audioPlayer) {
@@ -64,10 +65,8 @@ class AudioEqualizer extends HTMLElement {
       // Connect the analyser to the destination
       this.analyser.connect(this.audioContext.destination);
 
-
       // Initialize the visualization
       this.initializeVisualization();
-
 
       // Connect the last filter to the destination
       this.filters[this.filters.length - 1].connect(
@@ -79,6 +78,49 @@ class AudioEqualizer extends HTMLElement {
     } else {
       console.error("Audio player not found. Cannot initialize equalizer.");
     }
+
+    // Listen for the custom event to get the audio context
+    audioPlayer.addEventListener("audio-context-created", (event) => {
+      console.log("Received audio-context-created event in equalizer.");
+      const { audioContext, mediaElementSource } = event.detail;
+      this.setupEqualizerWithContext(audioContext, mediaElementSource);
+    });
+  }
+
+  setupEqualizerWithContext(context, mediaElementSource) {
+    console.log("Setting up equalizer with context...");
+    this.audioContext = context;
+    const frequencies = [40, 100, 250, 1000, 2500, 6000, 12000];
+    let previousNode = mediaElementSource;
+
+    frequencies.forEach((freq, index) => {
+      const filter = this.audioContext.createBiquadFilter();
+      filter.type = "peaking";
+      filter.frequency.value = freq;
+      filter.Q.value = 1;
+      filter.gain.value = 0; // Initial gain set to 0
+      previousNode.connect(filter);
+      this.filters.push(filter);
+
+      previousNode = filter;
+    });
+
+    // Create and connect an AnalyserNode for visualization
+    this.analyser = this.audioContext.createAnalyser();
+    this.analyser.fftSize = 256; // Number of frequency bins
+    this.filters[this.filters.length - 1].connect(this.analyser);
+
+    // Connect the analyser to the destination
+    this.analyser.connect(this.audioContext.destination);
+
+    // Initialize the visualization
+    this.initializeVisualization();
+
+    // Connect the last filter to the destination
+    this.filters[this.filters.length - 1].connect(this.audioContext.destination);
+
+    // Define listeners for sliders and presets
+    this.defineListeners();
   }
 
   initializeEqualizer() {
@@ -86,15 +128,15 @@ class AudioEqualizer extends HTMLElement {
   }
 
   defineListeners() {
+    console.log("Defining equalizer listeners...");
     const sliders = this.shadowRoot.querySelectorAll(".slider-container input");
-
 
     sliders.forEach((slider, index) => {
       slider.addEventListener("input", (event) => {
         const gainValue = parseFloat(event.target.value);
+        console.log(`Slider ${index} changed:`, gainValue);
         if (this.filters[index]) {
           this.filters[index].gain.value = gainValue;
-
         } else {
           console.error(`Filter ${index} not found.`);
         }

@@ -29,6 +29,7 @@ class AudioPlayer extends HTMLElement {
   }
 
   initializePlayer() {
+    console.log("Initializing player...");
     this.player = this.shadowRoot.querySelector("#player");
     if (!this.player) {
       console.error("Player element not found in shadow DOM.");
@@ -36,16 +37,26 @@ class AudioPlayer extends HTMLElement {
     }
     this.player.src = this.src; // Set the src attribute for the audio element
 
-    // Initialize AudioContext and connect the audio source
+    // Initialize AudioContext on startup
     if (!this.audioContext) {
+      console.log("Creating AudioContext...");
       this.audioContext = new (window.AudioContext ||
         window.webkitAudioContext)();
       this.mediaElementSource = this.audioContext.createMediaElementSource(
         this.player
       );
-
-      // Connect the audio graph: mediaElementSource -> stereoPanner -> destination
+      this.mediaElementSource.connect(this.audioContext.destination);
+      // Dispatch a custom event to notify other components
+      this.dispatchEvent(
+        new CustomEvent("audio-context-created", {
+          detail: { audioContext: this.audioContext, mediaElementSource: this.mediaElementSource },
+          bubbles: true,
+          composed: true,
+        })
+      );
+      console.log("AudioContext created and event dispatched.");
     }
+
     this.defineListeners();
   }
 
@@ -59,33 +70,45 @@ class AudioPlayer extends HTMLElement {
   }
 
   defineListeners() {
+    console.log("Defining listeners...");
     this.shadowRoot.querySelector("#play").addEventListener("click", () => {
-      this.player.play();
+      console.log("Play button clicked.");
+      this.audioContext.resume().then(() => {
+        this.player.play();
+      });
     });
     this.shadowRoot.querySelector("#pause").addEventListener("click", () => {
+      console.log("Pause button clicked.");
       this.player.pause();
     });
     this.shadowRoot.querySelector("#stop").addEventListener("click", () => {
+      console.log("Stop button clicked.");
       this.player.pause();
       this.player.currentTime = 0;
     });
     this.shadowRoot.querySelector("#forward").addEventListener("click", () => {
+      console.log("Forward button clicked.");
       this.player.currentTime += 10;
     });
     this.shadowRoot.querySelector("#backward").addEventListener("click", () => {
+      console.log("Backward button clicked.");
       this.player.currentTime -= 10;
     });
     this.shadowRoot
       .querySelector("#volumeSlider")
       .addEventListener("input", (e) => {
+        console.log("Volume slider changed:", e.target.value);
         this.player.volume = e.target.value;
       });
 
     // Listen for song-selected events
     document.addEventListener("song-selected", (event) => {
       const src = event.detail.src;
-      this.player.src = src;
-      this.player.play();
+      console.log("Song selected:", src);
+      this.audioContext.resume().then(() => {
+        this.player.src = src;
+        this.player.play();
+      });
     });
   }
 }
